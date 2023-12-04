@@ -12,9 +12,9 @@ public class Card : MonoBehaviour
     public int attack;
     public int cost;
     public int power;
-    public int cardID;
-    public string cardName;
-    public string cardDescription;
+    public int id;
+    public string title;
+    public string description;
     public Sprite imageBackground;
     public Sprite image;
 
@@ -24,8 +24,8 @@ public class Card : MonoBehaviour
     public bool isCardBackShown = false;
 
     // Texts
-    public TMP_Text cardNameValue;
-    public TMP_Text cardDescriptionValue;
+    public TMP_Text titleValue;
+    public TMP_Text descriptionValue;
     public TMP_Text cardCostValue;
     public TMP_Text cardAttackValue;
     public TMP_Text cardHealthValue;
@@ -46,8 +46,8 @@ public class Card : MonoBehaviour
 
     public void SetupCard()
     {
-        cardNameValue.text = cardData.cardName;
-        cardDescriptionValue.text = cardData.cardDescription;
+        titleValue.text = cardData.title;
+        descriptionValue.text = cardData.description;
         cardCostValue.text = cardData.cost.ToString();
         cardAttackValue.text = cardData.attack.ToString();
         cardHealthValue.text = cardData.startingHealth.ToString();
