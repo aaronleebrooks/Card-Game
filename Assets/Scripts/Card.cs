@@ -6,7 +6,7 @@ using TMPro;
 public class Card : MonoBehaviour
 {
     // Card properties
-    public CardScriptableObject SO_Card;
+    public SO_Card cardData;
     public int currentHealth;
     public int startingHealth;
     public int attack;
@@ -46,12 +46,12 @@ public class Card : MonoBehaviour
 
     public void SetupCard()
     {
-        cardNameValue.text = SO_Card.cardName;
-        cardDescriptionValue.text = SO_Card.cardDescription;
-        cardCostValue.text = SO_Card.cost.ToString();
-        cardAttackValue.text = SO_Card.attack.ToString();
-        cardHealthValue.text = SO_Card.startingHealth.ToString();
-        cardPowerValue.text = SO_Card.power.ToString();
+        cardNameValue.text = cardData.cardName;
+        cardDescriptionValue.text = cardData.cardDescription;
+        cardCostValue.text = cardData.cost.ToString();
+        cardAttackValue.text = cardData.attack.ToString();
+        cardHealthValue.text = cardData.startingHealth.ToString();
+        cardPowerValue.text = cardData.power.ToString();
 
         currentHealth = startingHealth;
 
