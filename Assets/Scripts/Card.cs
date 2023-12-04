@@ -5,7 +5,8 @@ using TMPro;
 
 public class Card : MonoBehaviour
 {
-
+    // Card properties
+    public CardScriptableObject SO_Card;
     public int currentHealth;
     public int startingHealth;
     public int attack;
@@ -14,6 +15,13 @@ public class Card : MonoBehaviour
     public int cardID;
     public string cardName;
     public string cardDescription;
+    public Sprite imageBackground;
+    public Sprite image;
+
+    public SpriteRenderer cardRenderer;
+    public Sprite cardBack;
+    public Sprite cardFront;
+    public bool isCardBackShown = false;
 
     // Texts
     public TMP_Text cardNameValue;
@@ -23,22 +31,46 @@ public class Card : MonoBehaviour
     public TMP_Text cardHealthValue;
     public TMP_Text cardPowerValue;
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        cardNameValue.text = cardName;
-        cardDescriptionValue.text = cardDescription;
-        cardCostValue.text = cost.ToString();
-        cardAttackValue.text = attack.ToString();
-        cardHealthValue.text = startingHealth.ToString();
-        cardPowerValue.text = power.ToString();
+       SetupCard();    
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FlipCard();
+        }
+    }
+
+    public void SetupCard()
+    {
+        cardNameValue.text = SO_Card.cardName;
+        cardDescriptionValue.text = SO_Card.cardDescription;
+        cardCostValue.text = SO_Card.cost.ToString();
+        cardAttackValue.text = SO_Card.attack.ToString();
+        cardHealthValue.text = SO_Card.startingHealth.ToString();
+        cardPowerValue.text = SO_Card.power.ToString();
+
+        currentHealth = startingHealth;
+
+        FlipCard();
+    }
+
+    public void FlipCard()
+    {
+        if (isCardBackShown)
+        {
+            cardRenderer.sprite = cardFront;
+            cardRenderer.sortingOrder = 0;
+            isCardBackShown = false;
+        }
+        else
+        {
+            cardRenderer.sprite = cardBack;
+            cardRenderer.sortingOrder = 6;
+            isCardBackShown = true;
+        }
     }
 }
