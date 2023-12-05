@@ -37,6 +37,8 @@ public class Card : MonoBehaviour
     private bool isSelected;
     private Collider cardCollider;
     public LayerMask tableLayer;
+    public static Card selectedCard;
+
 
 
     // Texts
@@ -137,13 +139,24 @@ public class Card : MonoBehaviour
         {
             if (isSelected)
             {
+                // Deselect the card
                 isSelected = false;
                 cardCollider.enabled = true;
+                selectedCard = null;
             }
             else
             {
+                // If there's already a selected card, deselect it
+                if (selectedCard != null)
+                {
+                    selectedCard.isSelected = false;
+                    selectedCard.cardCollider.enabled = true;
+                }
+
+                // Select the new card
                 isSelected = true;
                 cardCollider.enabled = false;
+                selectedCard = this;
             }
         }
     }
@@ -154,4 +167,5 @@ public class Card : MonoBehaviour
         cardCollider.enabled = true;
         AssignPositionAndRotation(handController.cardPositions[handPosition], handController.minPosition.rotation);
     }
+
 }
