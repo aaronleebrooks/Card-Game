@@ -1483,6 +1483,11 @@ MonoBehaviour:
   isCardBackShown: 0
   movementSpeed: 1
   rotationSpeed: 540
+  isInHand: 0
+  handPosition: 0
+  tableLayer:
+    serializedVersion: 2
+    m_Bits: 64
   titleValue: {fileID: 7591122121646687283}
   descriptionValue: {fileID: 6829232680991560861}
   cardCostValue: {fileID: 7484539226835191116}

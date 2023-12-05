@@ -34,6 +34,11 @@ public class Card : MonoBehaviour
     private HandController handController;
 
 
+    private bool isSelected;
+    private Collider cardCollider;
+    public LayerMask tableLayer;
+
+
     // Texts
     public TMP_Text titleValue;
     public TMP_Text descriptionValue;
@@ -46,6 +51,7 @@ public class Card : MonoBehaviour
     {
        SetupCard();
        handController = FindObjectOfType<HandController>();    
+       cardCollider = GetComponent<Collider>();
     }
 
     void Update()
@@ -56,6 +62,13 @@ public class Card : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             FlipCard();
+        }
+
+        if (isSelected)
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z;
+            transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
         }
     }
 
@@ -110,6 +123,23 @@ public class Card : MonoBehaviour
         if (isInHand)
         {
             AssignPositionAndRotation(handController.cardPositions[handPosition], handController.minPosition.rotation);
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if (isInHand)
+        {
+            if (isSelected)
+            {
+                isSelected = false;
+                cardCollider.enabled = true;
+            }
+            else
+            {
+                isSelected = true;
+                cardCollider.enabled = false;
+            }
         }
     }
 }
