@@ -69,6 +69,11 @@ public class Card : MonoBehaviour
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z;
             transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
+
+            if(Input.GetMouseButtonDown(1))
+            {
+                ReturnToHand();
+            }
         }
     }
 
@@ -141,5 +146,12 @@ public class Card : MonoBehaviour
                 cardCollider.enabled = false;
             }
         }
+    }
+
+    public void ReturnToHand()
+    {
+        isSelected = false;
+        cardCollider.enabled = true;
+        AssignPositionAndRotation(handController.cardPositions[handPosition], handController.minPosition.rotation);
     }
 }
