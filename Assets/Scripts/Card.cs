@@ -15,10 +15,11 @@ public class Card : MonoBehaviour
     public int id;
     public string title;
     public string description;
-    public Sprite imageBackground;
-    public Sprite image;
 
     public SpriteRenderer cardRenderer;
+    public SpriteRenderer imageBackgroundRenderer;
+    public SpriteRenderer imageRenderer;
+
     public Sprite cardBack;
     public Sprite cardFront;
     public bool isCardBackShown = false;
@@ -52,6 +53,8 @@ public class Card : MonoBehaviour
         cardAttackValue.text = cardData.attack.ToString();
         cardHealthValue.text = cardData.startingHealth.ToString();
         cardPowerValue.text = cardData.power.ToString();
+        imageRenderer.sprite = cardData.image;
+        imageBackgroundRenderer.sprite = cardData.imageBackground;
 
         currentHealth = startingHealth;
 

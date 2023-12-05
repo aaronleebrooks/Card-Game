@@ -44,3 +44,6 @@ TagManager:
   - name: Card
     uniqueID: 4230146487
     locked: 0
+  - name: New Layer 2
+    uniqueID: 1926260069
+    locked: 0
