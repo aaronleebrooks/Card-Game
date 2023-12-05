@@ -1430,6 +1430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2857783970563553053}
   - component: {fileID: 2857783970563553055}
+  - component: {fileID: 9154543264752769276}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1480,12 +1481,27 @@ MonoBehaviour:
   cardBack: {fileID: 21300000, guid: 2a0fc7632383cca4daa0d6ffb35e873b, type: 3}
   cardFront: {fileID: 21300000, guid: c77e8849eaf245b498db03166a251da8, type: 3}
   isCardBackShown: 0
+  movementSpeed: 1
+  rotationSpeed: 540
   titleValue: {fileID: 7591122121646687283}
   descriptionValue: {fileID: 6829232680991560861}
   cardCostValue: {fileID: 7484539226835191116}
   cardAttackValue: {fileID: 3430761262166536493}
   cardHealthValue: {fileID: 7550325261723848802}
   cardPowerValue: {fileID: 6585990374674562745}
+--- !u!65 &9154543264752769276
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2857783970563553052}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.9, y: 1, z: 4}
+  m_Center: {x: -0.00407113, y: 0, z: -0.006245971}
 --- !u!1 &4248400987292759427
 GameObject:
   m_ObjectHideFlags: 0

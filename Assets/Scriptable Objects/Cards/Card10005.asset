@@ -17,7 +17,7 @@ MonoBehaviour:
   attack: 1
   cost: 0
   power: 1
-  title: Basic Week
+  title: Basic Weak
   description: This card has less than average attack and health
   imageBackground: {fileID: 21300000, guid: 87ef39150fb6c3443b69613ff7baabbf, type: 3}
   image: {fileID: 21300000, guid: b0338847cb182794e9b7fbe22cbed581, type: 3}

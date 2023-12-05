@@ -24,6 +24,16 @@ public class Card : MonoBehaviour
     public Sprite cardFront;
     public bool isCardBackShown = false;
 
+    private Vector3 targetPoint;
+    private Quaternion targetRotation;
+    public float movementSpeed = 1f;
+    public float rotationSpeed = 540f;
+
+    public bool isInHand;
+    public int handPosition;
+    private HandController handController;
+
+
     // Texts
     public TMP_Text titleValue;
     public TMP_Text descriptionValue;
@@ -34,11 +44,15 @@ public class Card : MonoBehaviour
 
     void Start()
     {
-       SetupCard();    
+       SetupCard();
+       handController = FindObjectOfType<HandController>();    
     }
 
     void Update()
     {
+        transform.position = Vector3.Lerp(transform.position, targetPoint, movementSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             FlipCard();
@@ -65,15 +79,37 @@ public class Card : MonoBehaviour
     {
         if (isCardBackShown)
         {
+            cardRenderer.sprite = cardBack;
+            cardRenderer.sortingOrder = 6;
+            isCardBackShown = true;
+        }
+        else
+        {
             cardRenderer.sprite = cardFront;
             cardRenderer.sortingOrder = 0;
             isCardBackShown = false;
         }
-        else
+    }
+
+    public void AssignPositionAndRotation(Vector3 point, Quaternion rotation)
+    {
+        targetPoint = point;
+        targetRotation = rotation;
+    }
+
+    private void OnMouseOver()
+    {
+        if (isInHand)
         {
-            cardRenderer.sprite = cardBack;
-            cardRenderer.sortingOrder = 6;
-            isCardBackShown = true;
+            AssignPositionAndRotation(handController.cardPositions[handPosition] + new Vector3(0f, 1f, .5f), Quaternion.identity);
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        if (isInHand)
+        {
+            AssignPositionAndRotation(handController.cardPositions[handPosition], handController.minPosition.rotation);
         }
     }
 }

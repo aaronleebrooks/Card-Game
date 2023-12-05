@@ -8,6 +8,7 @@ public class HandController : MonoBehaviour
     public List<Card> handOfCards = new List<Card>();
     public Transform minPosition;
     public Transform maxPosition;
+    [HideInInspector]
     public List<Vector3> cardPositions = new List<Vector3>();
 
     void Start()
@@ -24,7 +25,9 @@ public class HandController : MonoBehaviour
             Vector3 cardPosition = new Vector3(minPosition.position.x + (distanceBetweenCards * i), minPosition.position.y, minPosition.position.z);
             cardPositions.Add(cardPosition);
 
-            handOfCards[i].transform.position = cardPosition;
+            handOfCards[i].isInHand = true;
+            handOfCards[i].handPosition = i;
+            handOfCards[i].AssignPositionAndRotation(cardPosition, minPosition.rotation);
         }
     }
 }
