@@ -26,7 +26,7 @@ public class Card : MonoBehaviour
 
     private Vector3 targetPoint;
     private Quaternion targetRotation;
-    public float movementSpeed = 1f;
+    public float movementSpeed = 10f;
     public float rotationSpeed = 540f;
 
     public bool isInHand;

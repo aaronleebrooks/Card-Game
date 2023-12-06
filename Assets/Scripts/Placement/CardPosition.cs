@@ -7,6 +7,13 @@ public class CardPosition : MonoBehaviour
     public Card activeCard;
     public TablePosition tablePosition;
 
+    private HandController handController;
+
+    void Start()
+    {
+        handController = FindObjectOfType<HandController>();   
+    }
+
     private void OnMouseDown()
     {
         if (tablePosition == TablePosition.Player && Card.selectedCard != null)
@@ -14,14 +21,12 @@ public class CardPosition : MonoBehaviour
             activeCard = Card.selectedCard;
 
             // Move the selected card to this CardPosition
-            activeCard.AssignPositionAndRotation(transform.position, new Quaternion(0f, 0f, 0f, 0f));
-
-            // Update the activeCard
+            activeCard.AssignPositionAndRotation(transform.position, Quaternion.identity);
             
+            handController.RemoveCardFromHand(activeCard);
 
             // Deselect the card
             activeCard.isSelected = false;
-            activeCard.isInHand = false;
             activeCard.cardCollider.enabled = true;
             activeCard = null;
         }

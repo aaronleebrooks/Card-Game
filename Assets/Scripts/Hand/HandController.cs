@@ -30,4 +30,18 @@ public class HandController : MonoBehaviour
             handOfCards[i].AssignPositionAndRotation(cardPosition, minPosition.rotation);
         }
     }
+
+    public void AddCardToHand(Card card)
+    {   
+        card.isInHand = true;
+        handOfCards.Add(card);
+        SetCardPositionsInHand();
+    }
+
+    public void RemoveCardFromHand(Card card)
+    {
+        card.isInHand = false;
+        handOfCards.Remove(card);
+        SetCardPositionsInHand();
+    }
 }
