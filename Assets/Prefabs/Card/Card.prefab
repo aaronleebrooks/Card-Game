@@ -1485,9 +1485,14 @@ MonoBehaviour:
   rotationSpeed: 540
   isInHand: 0
   handPosition: 0
+  isSelected: 0
+  cardCollider: {fileID: 9154543264752769276}
   tableLayer:
     serializedVersion: 2
     m_Bits: 64
+  placementLayer:
+    serializedVersion: 2
+    m_Bits: 0
   titleValue: {fileID: 7591122121646687283}
   descriptionValue: {fileID: 6829232680991560861}
   cardCostValue: {fileID: 7484539226835191116}

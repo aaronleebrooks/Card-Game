@@ -33,12 +33,13 @@ public class Card : MonoBehaviour
     public int handPosition;
     private HandController handController;
 
-
-    private bool isSelected;
-    private Collider cardCollider;
+    [HideInInspector]
+    public bool isSelected;
+    public Collider cardCollider;
     public LayerMask tableLayer;
-    public static Card selectedCard;
 
+    public LayerMask placementLayer;
+    public static Card selectedCard;
 
 
     // Texts
