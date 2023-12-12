@@ -5,43 +5,47 @@ using UnityEngine;
 public class HandController : MonoBehaviour
 {
 
-    public List<Card> handOfCards = new List<Card>();
+    public List<Card> handOfCards;
+
+    public List<CardPosition> handPositions;
     public Transform minPosition;
     public Transform maxPosition;
-    [HideInInspector]
-    public List<Vector3> cardPositions = new List<Vector3>();
+    public Player player;
 
-    void Start()
+    private void Awake()
     {
-        SetCardPositionsInHand();
+        player.OnCardsDrawnToHand += AddCardsToHand;
+    }
+
+    private void OnDestroy()
+    {
+        player.OnCardsDrawnToHand -= AddCardsToHand;
     }
 
     public void SetCardPositionsInHand()
     {
-        cardPositions.Clear();
         float distanceBetweenCards = (maxPosition.position.x - minPosition.position.x) / (handOfCards.Count - 1);
-        for (int i = 0; i < handOfCards.Count; i++)
+        for (int i = 0; i < handPositions.Count; i++)
         {
             Vector3 cardPosition = new Vector3(minPosition.position.x + (distanceBetweenCards * i), minPosition.position.y, minPosition.position.z);
-            cardPositions.Add(cardPosition);
-
-            handOfCards[i].isInHand = true;
-            handOfCards[i].handPosition = i;
-            handOfCards[i].AssignPositionAndRotation(cardPosition, minPosition.rotation);
+            handPositions[i].transform.position = cardPosition;
+            handPositions[i].gameObject.SetActive(i < handOfCards.Count);
         }
     }
 
     public void AddCardToHand(Card card)
     {   
-        card.isInHand = true;
+        card.cardLocation = CardLocation.Hand;
+        Debug.Log("Card added to hand" + card.id.ToString());
         handOfCards.Add(card);
         SetCardPositionsInHand();
     }
 
-    public void RemoveCardFromHand(Card card)
+    private void AddCardsToHand(List<Card> cards)
     {
-        card.isInHand = false;
-        handOfCards.Remove(card);
-        SetCardPositionsInHand();
+        foreach (var card in cards)
+        {
+            AddCardToHand(card);
+        }
     }
 }

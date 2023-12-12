@@ -1,12 +1,19 @@
-public enum TablePosition
+public enum CardLocation
 {
-    Player,
-    Opponent,
-    PlayerDiscardPile,
-    OpponentDiscardPile,
-    PlayerDeck,
-    OpponentDeck,
+    DiscardPile,
+    DrawPile,
     Store,
-    PlayerDiscardZone,
-    OpponentDiscardZone
+    Hand,
+    Playfield,
+    Selected
+}
+
+public enum TurnPhase
+{
+    PlayerTurnStart,
+    PlayerTurnMain,
+    PlayerTurnEnd,
+    EnemyTurnStart,
+    EnemyTurnMain,
+    EnemyTurnEnd,
 }
