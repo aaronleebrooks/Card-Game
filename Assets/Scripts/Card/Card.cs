@@ -30,6 +30,7 @@ public class Card : MonoBehaviour
     public float rotationSpeed = 540f;
 
     public CardLocation cardLocation;
+    public CardPosition cardPosition;
     public int handPosition;
 
     public bool isSelected;
@@ -55,7 +56,12 @@ public class Card : MonoBehaviour
     }
 
     void Update()
-    {
+    {   
+        if(cardPosition)
+        {
+            targetPoint = cardPosition.transform.position;
+        }
+        
         transform.position = Vector3.Lerp(transform.position, targetPoint, movementSpeed * Time.deltaTime);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 

@@ -65,14 +65,16 @@ public class CardMovementController : MonoBehaviour
     {
         foreach (var card in cards)
         {
-            MoveCardToPosition(card, handPositions[cards.IndexOf(card)].transform.position);
+            CardPosition firstEmpty = GetFirstEmptyHandPosition();
             card.cardLocation = CardLocation.Hand;
+            card.cardPosition = firstEmpty;
+            firstEmpty.HasCard = true;
         }
     }
 
     private void MoveCardToDiscardPile(Card card)
     {
-        MoveCardToPosition(card, discardPilePosition.transform.position);
+        card.cardPosition = discardPilePosition;
         card.cardLocation = CardLocation.DiscardPile;
     }
 
@@ -80,7 +82,7 @@ public class CardMovementController : MonoBehaviour
     {
         foreach (var card in cards)
         {
-            MoveCardToPosition(card, discardPilePosition.transform.position);
+            card.cardPosition = discardPilePosition;
             card.cardLocation = CardLocation.DiscardPile;
         }
     }
@@ -89,7 +91,7 @@ public class CardMovementController : MonoBehaviour
     {
         foreach (var card in cards)
         {
-            MoveCardToPosition(card, drawPilePosition.transform.position);
+            card.cardPosition = drawPilePosition;
             card.cardLocation = CardLocation.DrawPile;
             card.SetIsCardBackShown(true);
         }
@@ -109,14 +111,14 @@ public class CardMovementController : MonoBehaviour
 
     private void MoveCardToSelectedPosition(Card card)
     {
-        MoveCardToPosition(card, selectedPosition.transform.position);
+        card.cardPosition = selectedPosition;
         card.cardLocation = CardLocation.Selected;
     }
 
     private void MoveCardBackToHand(Card card)
     { 
-        Vector3 handPosition = GetLastActiveHandPosition().transform.position;
-        MoveCardToPosition(card, handPosition);
+        CardPosition handPosition = GetLastActiveHandPosition();
+        card.cardPosition = handPosition;
         card.cardLocation = CardLocation.Hand;
     }
 
@@ -137,5 +139,18 @@ public class CardMovementController : MonoBehaviour
         }
 
         return null; // Return null if no active CardPosition is found
+    }
+
+    public CardPosition GetFirstEmptyHandPosition()
+    {
+        foreach (var handPosition in handPositions)
+        {
+            if (!handPosition.gameObject.activeInHierarchy || handPosition.HasCard)
+            {
+                continue;
+            }
+            return handPosition;
+        }
+        return null; // Return null if no empty CardPosition is found
     }
 }

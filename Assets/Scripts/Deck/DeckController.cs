@@ -12,6 +12,8 @@ public class DeckController : MonoBehaviour
     public Card cardPrefab; // Reference to the card prefab
     public Player player;
 
+    public int startingHandSize = 5;
+
     private void OnEnable()
     {
         player.OnDeckInitialized += InitializeDeck;
@@ -33,8 +35,13 @@ public class DeckController : MonoBehaviour
             newCard.cardData = cardData; // Assign the SO_Card to the Card object
             cards.Add(newCard);
         }
+        
         player.TriggerOnCardsSentToDrawPile(cards);
         drawPileController.drawPile = cards;
+        player.TriggerOnReshuffleDrawPile();
+
+        // Draw the starting hand
+        player.TriggerOnCardsDrawn(startingHandSize);
     }
 
 }

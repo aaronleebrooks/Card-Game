@@ -75,6 +75,11 @@ public class Player : MonoBehaviour
     public void TriggerOnCardsDrawnToHand(List<Card> cards)
     {
         OnCardsDrawnToHand?.Invoke(cards);
+        foreach (var card in cards)
+        {
+            card.cardLocation = CardLocation.Hand;
+            card.SetIsCardBackShown(false);
+        }
     }
 
     public void TriggerOnTurnPhaseChanged()

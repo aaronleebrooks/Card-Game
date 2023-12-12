@@ -5,4 +5,6 @@ using UnityEngine;
 public class CardPosition : MonoBehaviour
 {
     public CardLocation cardLocation;
+    public bool HasCard = false;
+
 }

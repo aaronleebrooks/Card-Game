@@ -24,7 +24,11 @@ public class HandController : MonoBehaviour
 
     public void SetCardPositionsInHand()
     {
-        float distanceBetweenCards = (maxPosition.position.x - minPosition.position.x) / (handOfCards.Count - 1);
+        float distanceBetweenCards = 0;
+        if (handOfCards.Count > 1)
+        {
+            distanceBetweenCards = (maxPosition.position.x - minPosition.position.x) / (handOfCards.Count - 1);
+        }
         for (int i = 0; i < handPositions.Count; i++)
         {
             Vector3 cardPosition = new Vector3(minPosition.position.x + (distanceBetweenCards * i), minPosition.position.y, minPosition.position.z);
