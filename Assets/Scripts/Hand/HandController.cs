@@ -7,7 +7,7 @@ public class HandController : MonoBehaviour
 
     public List<Card> handOfCards;
 
-    public List<CardPosition> handPositions;
+    public List<HandPosition> handPositions;
     public Transform minPosition;
     public Transform maxPosition;
     public Player player;
@@ -39,8 +39,6 @@ public class HandController : MonoBehaviour
 
     public void AddCardToHand(Card card)
     {   
-        card.cardLocation = CardLocation.Hand;
-        Debug.Log("Card added to hand" + card.id.ToString());
         handOfCards.Add(card);
         SetCardPositionsInHand();
     }

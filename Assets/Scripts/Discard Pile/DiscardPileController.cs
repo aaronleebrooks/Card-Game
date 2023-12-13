@@ -25,7 +25,6 @@ public class DiscardPileController : MonoBehaviour
     public void DiscardForMana(Card card)
     {
         discardedCards.Add(card);
-        card.transform.position = discardPilePosition.position;
     }
 
     public void DiscardWithoutManaGain(List<Card> cards)

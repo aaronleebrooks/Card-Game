@@ -5,10 +5,9 @@ using UnityEngine;
 public class CardMovementController : MonoBehaviour
 {
     public CardPosition drawPilePosition;
-    public List<CardPosition> handPositions;
+    public List<HandPosition> handPositions;
     public CardPosition discardPilePosition;
-    public CardPosition playerFieldPosition;
-    public CardPosition selectedPosition;
+    public List<PlayfieldPosition> playerFieldPositions;
     public Player player;
 
     private void Awake()
@@ -20,9 +19,9 @@ public class CardMovementController : MonoBehaviour
         player.OnHandCardHover += MoveCardUpOnHover;
         player.OffHandCardHover += MoveCardDownOffHover;
         player.OnSelectHandCard += MoveCardToSelectedPosition;
-        player.OffSelectHandCard += MoveCardBackToHand;
+        player.OffSelectHandCard += MoveCardOffSelectedPosition;
         player.OnReplaceHandCard += MoveCardBackToHand;
-        player.OnPlayHandCard += MoveCardToPlayfield;
+        player.OnCardPlayed += MoveCardToPlayfield;
         // Add more event subscriptions as needed
     }
 
@@ -35,9 +34,9 @@ public class CardMovementController : MonoBehaviour
         player.OnHandCardHover -= MoveCardUpOnHover;
         player.OffHandCardHover -= MoveCardDownOffHover;
         player.OnSelectHandCard -= MoveCardToSelectedPosition;
-        player.OffSelectHandCard -= MoveCardBackToHand;
+        player.OffSelectHandCard -= MoveCardOffSelectedPosition;
         player.OnReplaceHandCard -= MoveCardBackToHand;
-        player.OnPlayHandCard -= MoveCardToPlayfield;
+        player.OnCardPlayed -= MoveCardToPlayfield;
         // Remove the event subscriptions when the object is destroyed
     }
 
@@ -65,8 +64,7 @@ public class CardMovementController : MonoBehaviour
     {
         foreach (var card in cards)
         {
-            CardPosition firstEmpty = GetFirstEmptyHandPosition();
-            card.cardLocation = CardLocation.Hand;
+            HandPosition firstEmpty = GetFirstEmptyHandPosition();
             card.cardPosition = firstEmpty;
             firstEmpty.HasCard = true;
         }
@@ -74,8 +72,10 @@ public class CardMovementController : MonoBehaviour
 
     private void MoveCardToDiscardPile(Card card)
     {
+        Debug.Log("Moving card to discard pile" + card.name);
+        player.TriggerOffSelectHandCard(card);
+        card.cardCollider.enabled = false;
         card.cardPosition = discardPilePosition;
-        card.cardLocation = CardLocation.DiscardPile;
     }
 
     private void MoveCardsToDiscardPile(List<Card> cards)
@@ -83,7 +83,6 @@ public class CardMovementController : MonoBehaviour
         foreach (var card in cards)
         {
             card.cardPosition = discardPilePosition;
-            card.cardLocation = CardLocation.DiscardPile;
         }
     }
 
@@ -92,43 +91,52 @@ public class CardMovementController : MonoBehaviour
         foreach (var card in cards)
         {
             card.cardPosition = drawPilePosition;
-            card.cardLocation = CardLocation.DrawPile;
             card.SetIsCardBackShown(true);
         }
     }
 
     private void MoveCardUpOnHover(Card card)
     {   
-        Vector3 hoverPosition = new Vector3(card.transform.position.x, card.transform.position.y + 0.5f, card.transform.position.z);
-        MoveCardToPosition(card, hoverPosition);
+        MoveCardToPosition(card, GetHightlightLocation(card.transform.position));
     }
 
     private void MoveCardDownOffHover(Card card)
     {
-        Vector3 hoverPosition = new Vector3(card.transform.position.x, card.transform.position.y - 0.5f, card.transform.position.z);
-        MoveCardToPosition(card, hoverPosition);
+        MoveCardToPosition(card, GetNotHightlightLocation(card.transform.position));
     }
 
     private void MoveCardToSelectedPosition(Card card)
     {
-        card.cardPosition = selectedPosition;
-        card.cardLocation = CardLocation.Selected;
+        card.cardPosition.transform.position = GetHightlightLocation(card.transform.position);
+    }
+
+    private void MoveCardOffSelectedPosition(Card card)
+    {
+        card.cardPosition.transform.position = GetNotHightlightLocation(card.transform.position);
     }
 
     private void MoveCardBackToHand(Card card)
     { 
-        CardPosition handPosition = GetLastActiveHandPosition();
+        HandPosition handPosition = GetLastActiveHandPosition();
         card.cardPosition = handPosition;
-        card.cardLocation = CardLocation.Hand;
     }
 
-    private void MoveCardToPlayfield(Card card, CardPosition playfieldPosition)
+    private void MoveCardToPlayfield(Card card, PlayfieldPosition playfieldPosition)
     {
-        MoveCardToPosition(card, playfieldPosition.transform.position);
-        card.cardLocation = CardLocation.Playfield;
+        card.cardPosition = playfieldPosition;
     }
 
-    public CardPosition GetLastActiveHandPosition()
+    public Vector3 GetHightlightLocation(Vector3 oldPosition) {
+        Vector3 highlightPosition = new Vector3(oldPosition.x, oldPosition.y + 0.5f, oldPosition.z);
+        return highlightPosition;
+    }
+
+    public Vector3 GetNotHightlightLocation(Vector3 oldPosition) {
+        Vector3 highlightPosition = new Vector3(oldPosition.x, oldPosition.y - 0.5f, oldPosition.z);
+        return highlightPosition;
+    }
+
+    public HandPosition GetLastActiveHandPosition()
     {
         for (int i = handPositions.Count - 1; i >= 0; i--)
         {
@@ -141,7 +149,7 @@ public class CardMovementController : MonoBehaviour
         return null; // Return null if no active CardPosition is found
     }
 
-    public CardPosition GetFirstEmptyHandPosition()
+    public HandPosition GetFirstEmptyHandPosition()
     {
         foreach (var handPosition in handPositions)
         {

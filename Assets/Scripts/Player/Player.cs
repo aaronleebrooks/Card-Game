@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     public PlayfieldController playfield;
     public int health;
     public string playerName;
+    public ManaController manaController;
+    public Card selectedCard;
 
     //Events
     public event Action OnDeckInitialized;
@@ -17,7 +19,7 @@ public class Player : MonoBehaviour
     public event Action<int> OnCardsDrawn;
     public event Action OnDrawPileEmpty;
     public event Action OnReshuffleDrawPile;
-    public event Action<Card> OnCardPlayed;
+    public event Action<Card, PlayfieldPosition> OnCardPlayed;
     public event Action<List<Card>> OnCardsSentToDiscardPile;
     public event Action<List<Card>> OnCardsSentToDrawPile;
     public event Action<List<Card>> OnCardsDrawnToHand;
@@ -27,13 +29,18 @@ public class Player : MonoBehaviour
     public event Action<Card> OffHandCardHover;
     public event Action<Card> OnSelectHandCard;
     public event Action<Card> OffSelectHandCard;
-
     public event Action<Card> OnReplaceHandCard;
-    public event Action<Card, CardPosition> OnPlayHandCard;
+    public event Action<int> OnManaValueChanged;
+
 
     private void Awake()
     {
         OnDeckInitialized?.Invoke();
+    }
+
+    public bool HasEnoughMana(Card card)
+    {
+        return manaController.mana >= card.cost;
     }
 
         // Event Triggers
@@ -49,12 +56,18 @@ public class Player : MonoBehaviour
 
     public void TriggerOnCardDiscardedForMana(Card card)
     {
+        Debug.Log("Discarded for mana " + card.name);
         OnCardDiscardedForMana?.Invoke(card);
     }
 
     public void TriggerOnCardsDrawn(int count)
     {
         OnCardsDrawn?.Invoke(count);
+    }
+
+    public void TriggerOnManaValueChanged(int mana)
+    {
+        OnManaValueChanged?.Invoke(mana);
     }
 
     public void TriggerOnDrawPileEmpty()
@@ -67,9 +80,9 @@ public class Player : MonoBehaviour
         OnReshuffleDrawPile?.Invoke();
     }
 
-    public void TriggerOnCardPlayed(Card card)
+    public void TriggerOnCardPlayed(Card card, PlayfieldPosition position)
     {
-        OnCardPlayed?.Invoke(card);
+        OnCardPlayed?.Invoke(card, position);
     }
 
     public void TriggerOnCardsDrawnToHand(List<Card> cards)
@@ -77,7 +90,6 @@ public class Player : MonoBehaviour
         OnCardsDrawnToHand?.Invoke(cards);
         foreach (var card in cards)
         {
-            card.cardLocation = CardLocation.Hand;
             card.SetIsCardBackShown(false);
         }
     }
@@ -115,20 +127,19 @@ public class Player : MonoBehaviour
     public void TriggerOnSelectHandCard(Card card)
     {
         OnSelectHandCard?.Invoke(card);
+        card.SelectHighlight(true);
+        selectedCard = card;
     }
 
     public void TriggerOffSelectHandCard(Card card)
     {
         OffSelectHandCard?.Invoke(card);
+        card.SelectHighlight(false);
+        selectedCard = null;
     }
 
     public void TriggerOnReplaceHandCard(Card card)
     {
         OnReplaceHandCard?.Invoke(card);
-    }
-
-    public void TriggerOnPlayHandCard(Card card, CardPosition position)
-    {
-        OnPlayHandCard?.Invoke(card, position);
     }
 }
