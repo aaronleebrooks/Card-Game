@@ -90,7 +90,10 @@ public class Player : MonoBehaviour
         OnCardsDrawnToHand?.Invoke(cards);
         foreach (var card in cards)
         {
-            card.SetIsCardBackShown(false);
+            if(card.isOwnedByPlayer)
+            {
+                card.SetIsCardBackShown(false);
+            }
         }
     }
 
@@ -128,6 +131,7 @@ public class Player : MonoBehaviour
     {
         OnSelectHandCard?.Invoke(card);
         card.SelectHighlight(true);
+        card.isSelected = true;
         selectedCard = card;
     }
 
@@ -135,6 +139,7 @@ public class Player : MonoBehaviour
     {
         OffSelectHandCard?.Invoke(card);
         card.SelectHighlight(false);
+        card.isSelected = false;
         selectedCard = null;
     }
 

@@ -30,7 +30,8 @@ public class DeckController : MonoBehaviour
         foreach (var cardData in deckData.Cards)
         {
             Card newCard = Instantiate(cardPrefab); // Create a new Card object
-            newCard.player = player;
+            newCard.owner = player;
+            newCard.isOwnedByPlayer = player.CompareTag("Player");
             newCard.name = "Card " + (cards.Count + 1).ToString();
             newCard.cardData = cardData; // Assign the SO_Card to the Card object
             cards.Add(newCard);

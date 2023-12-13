@@ -29,15 +29,17 @@ public class Card : MonoBehaviour
     public float movementSpeed = 10f;
     public float rotationSpeed = 540f;
     public CardPosition cardPosition;
-    public int handPosition;
 
     public bool isSelected;
+
+    public bool isHovered;
     public Collider cardCollider;
     public LayerMask tableLayer;
 
     public static Card selectedCard;
 
-    public Player player;
+    public Player owner;
+    public bool isOwnedByPlayer;
 
     // Texts
     public TMP_Text titleValue;
@@ -50,13 +52,24 @@ public class Card : MonoBehaviour
     void Start()
     {
         SetupCard();
-        player.OnManaValueChanged += AffordableHighlight;
+        owner.OnManaValueChanged += AffordableHighlight;
         cardCollider = GetComponent<Collider>();
     }
 
     void Update()
-    {   
-        if(cardPosition)
+    {
+        if (!cardPosition)
+        {
+            return;
+        }
+
+        if (isOwnedByPlayer &&
+            cardPosition.cardLocation == CardLocation.Hand &&
+            (isSelected || isHovered))
+        {
+            targetPoint = cardPosition.transform.position + new Vector3(0, 0, 0.5f);
+        }
+        else
         {
             targetPoint = cardPosition.transform.position;
         }
@@ -72,7 +85,7 @@ public class Card : MonoBehaviour
 
     private void OnDestroy()
     {
-        player.OnManaValueChanged -= AffordableHighlight;
+        owner.OnManaValueChanged -= AffordableHighlight;
     }
 
     public void SetupCard()
@@ -115,6 +128,37 @@ public class Card : MonoBehaviour
         }
     }
 
+    private void OnMouseEnter()
+    {
+        if(cardPosition != null)
+        {
+            isHovered = true;
+            switch (cardPosition.cardLocation)
+            {
+                case CardLocation.Hand:
+                    if (isOwnedByPlayer)
+                    {
+                        owner.TriggerOnHandCardHover(this);
+                    }
+                    break;
+                case CardLocation.Playfield:
+                    //on hover in playerPlayfield
+                    break;
+                case CardLocation.DrawPile:
+                    //on hover in draw pile
+                    break;
+                case CardLocation.DiscardPile:
+                    //on hover in discard pile
+                    break;
+                case CardLocation.Store:
+                    //on hover in store
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void OnMouseOver()
     {
         if(cardPosition != null)
@@ -122,7 +166,7 @@ public class Card : MonoBehaviour
             switch (cardPosition.cardLocation)
             {
                 case CardLocation.Hand:
-                    player.TriggerOnHandCardHover(this);
+                    //on hover in playerHand
                     break;
                 case CardLocation.Playfield:
                     //on hover in playerPlayfield
@@ -146,10 +190,14 @@ public class Card : MonoBehaviour
     {
         if(cardPosition != null)
         {
+            isHovered = false;
             switch (cardPosition.cardLocation)
             {
                 case CardLocation.Hand:
-                    player.TriggerOffHandCardHover(this);
+                    if (isOwnedByPlayer)
+                    {
+                        owner.TriggerOffHandCardHover(this);
+                    }
                     break;
                 case CardLocation.Playfield:
                     //off hover in playerPlayfield
@@ -174,7 +222,10 @@ public class Card : MonoBehaviour
         switch (cardPosition.cardLocation)
         {
             case CardLocation.Hand:
-                handleCardSelection(this);
+                if(isOwnedByPlayer)
+                {
+                    handleCardSelection(this);
+                }
                 break;
             case CardLocation.Playfield:
                 //off hover in playerPlayfield
@@ -197,7 +248,7 @@ public class Card : MonoBehaviour
     {
         isSelected = false;
         cardCollider.enabled = true;
-        player.TriggerOnReplaceHandCard(this);
+        owner.TriggerOnReplaceHandCard(this);
     }
 
     public void SelectHighlight(bool isHighlighted)
@@ -214,7 +265,7 @@ public class Card : MonoBehaviour
 
     private void AffordableHighlight(int _)
     {
-        if (player.HasEnoughMana(this) &&
+        if (owner.HasEnoughMana(this) &&
             cardPosition != null &&
             cardPosition.cardLocation == CardLocation.Hand)
         {
@@ -228,21 +279,17 @@ public class Card : MonoBehaviour
 
     private void handleCardSelection(Card card) {
         if(isSelected) {
-            player.TriggerOffSelectHandCard(this);
-            isSelected = false;
-            player.selectedCard = null;
+            owner.TriggerOffSelectHandCard(this);
             return;
         }
 
         // If there's already a selected card, deselect it
-        if (player.selectedCard != null && player.selectedCard != this)
+        if (owner.selectedCard != null && owner.selectedCard != this)
         {
-            player.selectedCard.isSelected = false;
+            owner.TriggerOffSelectHandCard(owner.selectedCard);
         }
 
-        player.TriggerOnSelectHandCard(this);
-        isSelected = true;
-        player.selectedCard = this;
+        owner.TriggerOnSelectHandCard(this);
     }
 
 }

@@ -16,10 +16,6 @@ public class CardMovementController : MonoBehaviour
         player.OnCardDiscardedForMana += MoveCardToDiscardPile;
         player.OnCardsSentToDrawPile += MoveCardsToDrawPile;
         player.OnCardsSentToDiscardPile += MoveCardsToDiscardPile;
-        player.OnHandCardHover += MoveCardUpOnHover;
-        player.OffHandCardHover += MoveCardDownOffHover;
-        player.OnSelectHandCard += MoveCardToSelectedPosition;
-        player.OffSelectHandCard += MoveCardOffSelectedPosition;
         player.OnReplaceHandCard += MoveCardBackToHand;
         player.OnCardPlayed += MoveCardToPlayfield;
         // Add more event subscriptions as needed
@@ -31,10 +27,6 @@ public class CardMovementController : MonoBehaviour
         player.OnCardDiscardedForMana -= MoveCardToDiscardPile;
         player.OnCardsSentToDrawPile -= MoveCardsToDrawPile;
         player.OnCardsSentToDiscardPile -= MoveCardsToDiscardPile;
-        player.OnHandCardHover -= MoveCardUpOnHover;
-        player.OffHandCardHover -= MoveCardDownOffHover;
-        player.OnSelectHandCard -= MoveCardToSelectedPosition;
-        player.OffSelectHandCard -= MoveCardOffSelectedPosition;
         player.OnReplaceHandCard -= MoveCardBackToHand;
         player.OnCardPlayed -= MoveCardToPlayfield;
         // Remove the event subscriptions when the object is destroyed
@@ -95,26 +87,6 @@ public class CardMovementController : MonoBehaviour
         }
     }
 
-    private void MoveCardUpOnHover(Card card)
-    {   
-        MoveCardToPosition(card, GetHightlightLocation(card.transform.position));
-    }
-
-    private void MoveCardDownOffHover(Card card)
-    {
-        MoveCardToPosition(card, GetNotHightlightLocation(card.transform.position));
-    }
-
-    private void MoveCardToSelectedPosition(Card card)
-    {
-        card.cardPosition.transform.position = GetHightlightLocation(card.transform.position);
-    }
-
-    private void MoveCardOffSelectedPosition(Card card)
-    {
-        card.cardPosition.transform.position = GetNotHightlightLocation(card.transform.position);
-    }
-
     private void MoveCardBackToHand(Card card)
     { 
         HandPosition handPosition = GetLastActiveHandPosition();
@@ -127,12 +99,12 @@ public class CardMovementController : MonoBehaviour
     }
 
     public Vector3 GetHightlightLocation(Vector3 oldPosition) {
-        Vector3 highlightPosition = new Vector3(oldPosition.x, oldPosition.y + 0.5f, oldPosition.z);
+        Vector3 highlightPosition = new Vector3(oldPosition.x, oldPosition.y, oldPosition.z + 0.5f);
         return highlightPosition;
     }
 
     public Vector3 GetNotHightlightLocation(Vector3 oldPosition) {
-        Vector3 highlightPosition = new Vector3(oldPosition.x, oldPosition.y - 0.5f, oldPosition.z);
+        Vector3 highlightPosition = new Vector3(oldPosition.x, oldPosition.y, oldPosition.z - 0.5f);
         return highlightPosition;
     }
 
